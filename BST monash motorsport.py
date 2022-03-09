@@ -1,20 +1,27 @@
-class binarysearchtree:
+test_loop_count = 0
+
+class binarynode: #
     def __init__(self, data):
         self.data = data
         self.leftChild = None
         self.rightChild = None
 
 def insert(root, newValue):
-       if root is None:
-        root = binarysearchtree(newValue)
+    global test_loop_count
+    test_loop_count += 1
+    if root is None: #if the first node is empty
+        root = binarynode(newValue)
         return root
     if newValue < root.data:
         root.leftChild = insert(root.leftChild, newValue)
-    else:
+    elif newValue > root.data:
         root.rightChild = insert(root.rightChild, newValue)
     return root
+#The worst case scenario is O(n) because it calls itself n times
 
 def search(root, value):
+    global test_loop_count
+    test_loop_count += 1
     if root is None:
         return False
     elif root.data == value:
@@ -25,6 +32,8 @@ def search(root, value):
         return search(root.rightChild, value)
 
 def minValueNode(node):
+    global test_loop_count
+    test_loop_count += 1
     current = node
     while current.leftChild is not None:
         current = current.leftChild
@@ -32,13 +41,15 @@ def minValueNode(node):
     return current
  
 
-def deleteNode(root, key):
+def delete(root, key):
+    global test_loop_count
+    test_loop_count += 1
     if root is None:
         return root
     if key < root.key:
-        root.left = deleteNode(root.leftChild, key)
-    elif(key > root.key):
-        root.right = deleteNode(root.rightChild, key)
+        root.left = delete(root.leftChild, key)
+    elif key > root.key:
+        root.right = delete(root.rightChild, key)
     else:
         if root.leftChild is None:
             temp = root.rightChild
@@ -54,6 +65,27 @@ def deleteNode(root, key):
 
         root.key = temp.key
 
-        root.rightChild = deleteNode(root.rightChild, temp.key)
+        root.rightChild = delete(root.rightChild, temp.key)
  
     return root
+
+# Create binary tree
+word_list = ["a", "b", "c"]
+root = None
+for w in word_list:
+    root = insert(root, w)
+
+#worst case: when all elements are in ascending/decending order therefore form a straight line in the bST
+
+# Testing for insert
+test_loop_count = 0
+root = insert(root, "d")
+print (test_loop_count)
+
+test_loop_count = 0
+root = search(root, "c")
+print (test_loop_count)
+
+test_loop_count = 0
+root = delete(root, "c")
+print (test_loop_count)
